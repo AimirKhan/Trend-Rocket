@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace App
 {
@@ -7,18 +8,20 @@ namespace App
     {
         [SerializeField] private MainWebView mainWebView;
 
-        public Action<bool> ShowUi;
+        public Action HideNative;
+        public UnityEvent OnOpenCap;
 
-        public void OpenCap()
+        public void OpenCapGame()
         {
             // Open Native Cap Game
-            Debug.Log("Cap Game Opened");
+            mainWebView.gameObject.SetActive(false);
+            OnOpenCap.Invoke();
         }
 
-        public void OpenMainGame(string appLink)
+        public void OpenProduct(string appLink)
         {
             mainWebView.OpenWebView(appLink);
-            ShowUi.Invoke(false);
+            HideNative.Invoke();
         }
     }
 }

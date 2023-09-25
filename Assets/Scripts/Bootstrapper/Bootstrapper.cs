@@ -2,6 +2,7 @@ using System.Collections;
 using App;
 using LunarConsolePlugin;
 using Services.RemoteConfig;
+using UI;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class Bootstrapper : MonoBehaviour
     private void Awake()
     {
         // 1. Remote Config Manager
-        remoteConfigManager.StartInitRemoteConfig();
+        //TODO Uncomment on Release remoteConfigManager.StartInitRemoteConfig();
 #if DEVELOPMENT_BUILD
         // 2. Lunar console
         lunarConsole?.gameObject.SetActive(true);
@@ -36,9 +37,12 @@ public class Bootstrapper : MonoBehaviour
 
     }
 
+    //
+    // App entry point
     void Start()
     {
-        StartCoroutine(Initialize());
+        openApp.OpenCapGame();
+        //TODO Uncomment on Release StartCoroutine(Initialize());
     }
     
     [ContextMenu("Start App")]
@@ -50,14 +54,14 @@ public class Bootstrapper : MonoBehaviour
     private IEnumerator Initialize()
     {
         // Show SplashScreen
-        uiManager.MainMenuUi.ShowSplashScreen();
-        yield return new WaitUntil(() => uiManager.MainMenuUi.LoadingScreen.activeSelf);
+        //uiManager.ShowLoadingScreen();
+        yield return new WaitUntil(() => uiManager.LoadingScreenUi.gameObject.activeSelf);
         
         // 1. Check Internet Connection
         if (!Utilities.CheckForInternetConnection())
         {
             Debug.Log("1. No Internet Connection!");
-            openApp.OpenCap();
+            openApp.OpenCapGame();
             yield break;
         }
         Debug.Log("1. Has Internet Connection!");
@@ -70,7 +74,7 @@ public class Bootstrapper : MonoBehaviour
         if (!remoteLink.StartsWith("http"))
         {
             Debug.Log("2. Remote link is null!");
-            openApp.OpenCap();
+            openApp.OpenCapGame();
             yield break;
         }
         Debug.Log("2. Has Remote link: " + remoteLink);
@@ -81,13 +85,13 @@ public class Bootstrapper : MonoBehaviour
         if (!workingLinks.IsOfferIdValid)
         {
             Debug.Log("3. Offer_id is null!");
-            openApp.OpenCap();
+            openApp.OpenCapGame();
             yield break;
         }
         Debug.Log("3. Offer_id is valid = " + workingLinks.IsOfferIdValid);
         
         // Final: open URL WebView game
         Debug.Log("4. Opening linked app with: " + workingLinks.ProductAppUrl);
-        openApp.OpenMainGame(workingLinks.ProductAppUrl);
+        openApp.OpenProduct(workingLinks.ProductAppUrl);
     }
 }
