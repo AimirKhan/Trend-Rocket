@@ -1,5 +1,17 @@
-﻿namespace Events
+﻿using System;
+using UnityEngine.Events;
+
+namespace Events
 {
+    public enum EGameState
+    {
+        Stopped,
+        Started,
+        Paused,
+        Continued,
+        Finished
+    }
+    
     public class GlobalEvents
     {
         private static GlobalEvents instance = null;
@@ -23,7 +35,8 @@
                 }
             }
         }
-        
-        
+
+        public Action<int> OnMovePlayer;
+        public Action<EGameState> OnGameState = state => { };
     }
 }

@@ -27,7 +27,8 @@ public sealed class GlobalVariables
         }
     }
 
-    public ReactiveProperty<int> CurrentScore = new(0);
+    public ReactiveProperty<float> CurrentScore = new(0);
+    public ReactiveProperty<float> RecordScore = new(0);
     public ReactiveProperty<int> CurrentZombie = new(0);
     public List<ZombieSO> zombies;
 }

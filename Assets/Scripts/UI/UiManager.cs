@@ -13,6 +13,8 @@ namespace UI
         [Header("UI Elements")]
         [SerializeField] private MainMenuController mainMenuUi;
         [SerializeField] private CapGameController capGameUi;
+        [SerializeField] private Game.CapGame capGame;
+        [SerializeField] private MainGameManager mainGameManager;
         [SerializeField] private LoadingScreen loadingScreen;
 
         public MainMenuController MainMenuUi => mainMenuUi;
@@ -37,6 +39,8 @@ namespace UI
         {
             loadingScreen.gameObject.SetActive(false);
             capGameUi.gameObject.SetActive(false);
+            mainGameManager.gameObject.SetActive(false);
+            capGame.gameObject.SetActive(false);
             mainMenuUi.gameObject.SetActive(menu);
         }
     
@@ -44,6 +48,8 @@ namespace UI
         {
             mainMenuUi.gameObject.SetActive(false);
             capGameUi.gameObject.SetActive(cap);
+            mainGameManager.gameObject.SetActive(cap);
+            capGame.gameObject.SetActive(cap);
             loadingScreen.gameObject.SetActive(false);
         }
     

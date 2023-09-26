@@ -11,7 +11,6 @@ namespace ScriptableObjects
         private void Awake()
         {
             GlobalVariables.Instance.zombies = zombies;
-            Debug.Log("Global Zombies Data " + GlobalVariables.Instance.zombies[0].AccessibleTypes.ValueText);
         }
     }
 }

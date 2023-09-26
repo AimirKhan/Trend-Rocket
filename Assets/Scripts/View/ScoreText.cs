@@ -1,17 +1,45 @@
+using Events;
 using TMPro;
 using UniRx;
 using UnityEngine;
 
-public class ScoreText : MonoBehaviour
+namespace View
 {
-    private TextMeshProUGUI scoreText;
-
-    private void Awake()
+    public class ScoreText : MonoBehaviour
     {
-        scoreText = GetComponent<TextMeshProUGUI>();
-        GlobalVariables.Instance.CurrentScore
-            .Select(ctx => ctx.ToString())
-            .Subscribe(ctx => scoreText.text = ctx + "km")
-            .AddTo(this);
+        [SerializeField] private bool isRecordScore;
+        private TextMeshProUGUI scoreText;
+
+        [SerializeField] private string score;
+        [SerializeField] private string recordScore;
+
+        private GlobalVariables globalVar;
+        
+        private void Awake()
+        {
+            globalVar = GlobalVariables.Instance;
+            scoreText = GetComponent<TextMeshProUGUI>();
+            
+            globalVar.CurrentScore
+                .Select(Mathf.RoundToInt)
+                .Where(ctx => !isRecordScore)
+                .Subscribe(ctx => scoreText.text = ctx + "km")
+                .AddTo(this);
+            globalVar.RecordScore
+                .Select(Mathf.RoundToInt)
+                .Where(ctx => isRecordScore)
+                .Subscribe(ctx => scoreText.text = ctx + "km")
+                .AddTo(this);
+            
+            GlobalEvents.Instance.OnGameState += SetRecord;
+        }
+
+        private void SetRecord(EGameState gameState)
+        {
+            if (globalVar.CurrentScore.Value >= globalVar.RecordScore.Value)
+            {
+                globalVar.RecordScore.Value = globalVar.CurrentScore.Value;
+            }
+        }
     }
 }

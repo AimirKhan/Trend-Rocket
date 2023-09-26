@@ -1,4 +1,5 @@
-﻿using UI.CapGame;
+﻿using Events;
+using UI.CapGame;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,11 +31,14 @@ namespace UI.MainGame
         private void BackToMainMenu()
         {
             capGameController.GoToMainMenu();
+            GlobalVariables.Instance.CurrentScore.Value = 0;
+            GlobalEvents.Instance.OnGameState.Invoke(EGameState.Stopped);
         }
 
         private void ContinueGame()
         {
             capGameController.ChangeGameScreen();
+            GlobalEvents.Instance.OnGameState.Invoke(EGameState.Continued);
         }
         
         private void OnDisable()

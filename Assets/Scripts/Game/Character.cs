@@ -51,7 +51,7 @@ namespace Game
 
         private void ChooseCharacter()
         {
-            var score = GlobalVariables.Instance.CurrentScore.Value;
+            var score = GlobalVariables.Instance.RecordScore.Value;
             var zombieCost = zombieData.AccessibleTypes.GoalAmount;
 
             if (score >= zombieCost)
