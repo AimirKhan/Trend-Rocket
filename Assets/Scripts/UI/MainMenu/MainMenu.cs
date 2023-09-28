@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Events;
 using Game;
+using Services;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ namespace UI.MainMenu
         private void StartCapGame()
         {
             mainMenuController.UiManager.ShowCapGame();
-            GlobalEvents.Instance.OnGameState.Invoke(EGameState.Started);
+            GlobalVariables.Instance.GameState.Value = EGameState.Started;
             GlobalVariables.Instance.CurrentScore.Value = 0;
         }
         

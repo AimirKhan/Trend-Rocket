@@ -1,4 +1,5 @@
 using Events;
+using Services;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -23,15 +24,24 @@ namespace View
             globalVar.CurrentScore
                 .Select(Mathf.RoundToInt)
                 .Where(ctx => !isRecordScore)
-                .Subscribe(ctx => scoreText.text = ctx + "km")
+                .Subscribe(ctx =>
+                {
+                    scoreText.text = ctx + "km";
+                    score = ctx.ToString();
+                })
                 .AddTo(this);
             globalVar.RecordScore
                 .Select(Mathf.RoundToInt)
                 .Where(ctx => isRecordScore)
-                .Subscribe(ctx => scoreText.text = ctx + "km")
+                .Subscribe(ctx =>
+                {
+                    recordScore = ctx.ToString();
+                    scoreText.text = ctx + "km";
+                })
                 .AddTo(this);
-            
-            GlobalEvents.Instance.OnGameState += SetRecord;
+            globalVar.GameState
+                .Subscribe(SetRecord)
+                .AddTo(this);
         }
 
         private void SetRecord(EGameState gameState)

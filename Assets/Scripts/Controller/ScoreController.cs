@@ -1,5 +1,6 @@
 using System;
 using Events;
+using Services;
 using UniRx;
 using UnityEngine;
 
@@ -12,7 +13,9 @@ namespace Controller
 
         private void Awake()
         {
-            GlobalEvents.Instance.OnGameState += ctx => gameState = ctx;
+            GlobalVariables.Instance.GameState
+                .Subscribe(ctx => gameState = ctx)
+                .AddTo(this);
             Observable.EveryUpdate()
                 .Where(ctx => gameState == EGameState.Started || gameState == EGameState.Continued)
                 .Subscribe(ctx => ChangeScore())
@@ -22,11 +25,6 @@ namespace Controller
         private void ChangeScore()
         {
             GlobalVariables.Instance.CurrentScore.Value += scoreSpeed * Time.deltaTime;
-        }
-
-        private void OnDisable()
-        {
-            GlobalEvents.Instance.OnGameState -= ctx => gameState = ctx;
         }
     }
 }

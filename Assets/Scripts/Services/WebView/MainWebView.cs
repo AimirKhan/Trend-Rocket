@@ -24,7 +24,7 @@ public class MainWebView : MonoBehaviour
         // Centrally located
         webViewObject.SetMargins(0, 0, 0, 0);
 #if DEVELOPMENT_BUILD
-        webViewObject.SetMargins(0, 0, 0, Screen.height / 4 );
+        //webViewObject.SetMargins(0, 0, 0, Screen.height / 4 );
 #endif
         webViewObject.SetTextZoom(100);
         webViewObject.SetScrollbarsVisibility(false);

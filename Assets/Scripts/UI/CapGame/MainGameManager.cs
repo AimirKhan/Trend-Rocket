@@ -1,5 +1,6 @@
 using System;
 using Events;
+using Services;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ namespace UI.CapGame
 
         private void ShowPauseMenu()
         {
-            globalEvents.OnGameState.Invoke(EGameState.Paused);
+            GlobalVariables.Instance.GameState.Value = EGameState.Paused;
             capGameController.ChangeGameScreen(EGamePanels.PauseScreen);
         }
         

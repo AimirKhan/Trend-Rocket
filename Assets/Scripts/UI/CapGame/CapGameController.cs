@@ -1,6 +1,9 @@
 using System;
+using Events;
+using Services;
 using UI.FinalScreen;
 using UI.MainGame;
+using UniRx;
 using UnityEngine;
 
 namespace UI.CapGame
@@ -16,6 +19,14 @@ namespace UI.CapGame
         [SerializeField] private UiManager uiManager;
         [SerializeField] private FinalScreenManager finalScreen;
         [SerializeField] private PauseMenu pauseMenu;
+
+        private void Awake()
+        {
+            GlobalVariables.Instance.GameState
+                .Where(ctx => ctx == EGameState.Finished)
+                .Subscribe(ctx => ChangeGameScreen(EGamePanels.FinalScreen))
+                .AddTo(this);
+        }
 
         public void ChangeGameScreen(EGamePanels gamePanel = EGamePanels.GameScreen)
         {

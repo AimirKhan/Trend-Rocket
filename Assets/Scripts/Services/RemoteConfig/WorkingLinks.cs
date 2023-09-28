@@ -15,6 +15,7 @@ namespace Services.RemoteConfig
         public string ProductAppUrl { get; private set; }
         public bool IsRemoteConfigFetched { get; private set; }
         public bool IsLinksGets { get; private set; }
+        public bool IsLinkExist { get; private set; }
         public bool IsOfferIdCheckComplete { get; private set; }
         public bool IsOfferIdValid { get; private set; }
         
@@ -28,11 +29,18 @@ namespace Services.RemoteConfig
             if (IsLinksGets)
                 return;
             RemoteUrl = RemoteConfigService.Instance.appConfig.GetString(remoteConfigKey);
+            if (!RemoteUrl.StartsWith("http"))
+            {
+                IsLinkExist = false;
+                IsLinksGets = true;
+                return;
+            }
             
             var keywordIndex = RemoteUrl.IndexOf(cropLinkKeyword, StringComparison.Ordinal);
             var result = RemoteUrl.Substring(
                 0, RemoteUrl.Length - cropLinkKeyword.Length - keywordIndex - 1);
             ProductAppUrl = result;
+            IsLinkExist = true;
             IsLinksGets = true;
         }
 
@@ -45,9 +53,6 @@ namespace Services.RemoteConfig
         
         private IEnumerator StartCheckOfferId()
         {
-            if (IsOfferIdCheckComplete)
-                yield break;
-            
             var request = UnityWebRequest.Get(RemoteUrl);
             yield return request.SendWebRequest();
             var response = JsonUtility.FromJson<Response>(request.downloadHandler.text);

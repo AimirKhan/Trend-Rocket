@@ -1,5 +1,6 @@
 using System;
 using Events;
+using Services;
 using UI.CapGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +32,7 @@ namespace UI.FinalScreen
         {
             capGameController.GoToMainMenu();
             GlobalVariables.Instance.CurrentScore.Value = 0;
-            GlobalEvents.Instance.OnGameState.Invoke(EGameState.Stopped);
+            GlobalVariables.Instance.GameState.Value = EGameState.Stopped;
         }
         
         private void OnDisable()

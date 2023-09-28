@@ -25,7 +25,8 @@ public class Bootstrapper : MonoBehaviour
 #if DEVELOPMENT_BUILD
         // 2. Lunar console
         lunarConsole?.gameObject.SetActive(true);
-
+#else
+        lunarConsole?.gameObject.SetActive(false);
 #endif
 #if !DEBUG
         // 3. OneSignal
@@ -35,14 +36,16 @@ public class Bootstrapper : MonoBehaviour
         }
 #endif
 
+        // Last. Set 60fps
+        Application.targetFrameRate = 60;
     }
 
     //
     // App entry point
     void Start()
     {
-        openApp.OpenCapGame();
-        //TODO Uncomment on Release StartCoroutine(Initialize());
+        //openApp.OpenCapGame(); // Comment to Full app working
+        StartCoroutine(Initialize()); //TODO Uncomment on Full app working
     }
     
     [ContextMenu("Start App")]
@@ -67,17 +70,18 @@ public class Bootstrapper : MonoBehaviour
         Debug.Log("1. Has Internet Connection!");
         
         // 2. Check RemoteConfig URL is not null
+        remoteConfigManager.StartInitRemoteConfig();
         yield return new WaitUntil(() => workingLinks.IsRemoteConfigFetched);
         workingLinks.GetAppLinks();
         yield return new WaitUntil(() => workingLinks.IsLinksGets);
-        var remoteLink = workingLinks.RemoteUrl;
-        if (!remoteLink.StartsWith("http"))
+        var remoteLinkExist = workingLinks.IsLinkExist;
+        if (!remoteLinkExist)
         {
             Debug.Log("2. Remote link is null!");
             openApp.OpenCapGame();
             yield break;
         }
-        Debug.Log("2. Has Remote link: " + remoteLink);
+        Debug.Log("2. Has Remote link: " + remoteLinkExist);
         
         // 3. Check offer_id is not null
         workingLinks.CheckOfferId();

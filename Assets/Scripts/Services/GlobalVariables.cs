@@ -1,34 +1,47 @@
-
 using System.Collections.Generic;
 using ScriptableObjects;
 using UniRx;
 
-public sealed class GlobalVariables
+namespace Services
 {
-    private static GlobalVariables instance = null;
-    private static readonly object padlock = new object();
-
-    GlobalVariables()
+    public enum EGameState
     {
+        None,
+        Stopped,
+        Started,
+        Paused,
+        Continued,
+        Finished
     }
 
-    public static GlobalVariables Instance
+    public sealed class GlobalVariables
     {
-        get
+        private static GlobalVariables instance = null;
+        private static readonly object padlock = new object();
+
+        GlobalVariables()
         {
-            lock (padlock)
+        }
+
+        public static GlobalVariables Instance
+        {
+            get
             {
-                if (instance == null)
+                lock (padlock)
                 {
-                    instance = new GlobalVariables();
+                    if (instance == null)
+                    {
+                        instance = new GlobalVariables();
+                    }
+                    return instance;
                 }
-                return instance;
             }
         }
-    }
 
-    public ReactiveProperty<float> CurrentScore = new(0);
-    public ReactiveProperty<float> RecordScore = new(0);
-    public ReactiveProperty<int> CurrentZombie = new(0);
-    public List<ZombieSO> zombies;
+        public ReactiveProperty<float> CurrentScore = new(0);
+        public ReactiveProperty<float> RecordScore = new(0);
+        public ReactiveProperty<int> CurrentZombie = new(0);
+        public ReactiveProperty<EGameState> GameState = new();
+        public List<ZombieSO> zombies;
+    }
 }
