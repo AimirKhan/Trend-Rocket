@@ -7,7 +7,7 @@ namespace UI.SplashScreen
     {
         private void Awake()
         {
-            gameObject.SetActive(true);
+            //gameObject.SetActive(true);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using Game;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 namespace App
 {
@@ -9,20 +9,28 @@ namespace App
     {
         [SerializeField] private MainWebView mainWebView;
 
-        public Action HideNative;
         public UnityEvent OnOpenCap;
 
         public void OpenCapGame()
         {
             // Open Native Cap Game
-            mainWebView.gameObject.SetActive(false);
-            OnOpenCap.Invoke();
+            // Load CapGameScene
+            //OnOpenCap.Invoke();
+            SceneManager.LoadScene(sceneBuildIndex: 1);
         }
 
         public void OpenProduct(string appLink)
         {
             mainWebView.OpenWebView(appLink);
-            HideNative.Invoke();
+            SetOrientation();
+        }
+        
+        private void SetOrientation()
+        {
+            Screen.autorotateToPortrait = true;
+            Screen.autorotateToLandscapeLeft = true;
+            Screen.autorotateToLandscapeRight = true;
+            Screen.orientation = ScreenOrientation.AutoRotation;
         }
     }
 }

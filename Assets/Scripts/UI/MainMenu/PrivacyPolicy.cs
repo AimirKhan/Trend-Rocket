@@ -8,28 +8,45 @@ namespace UI.MainMenu
     {
         private MainMenuController mainMenuController;
         [SerializeField] private Button privacyPolicyStartButton;
+        [SerializeField] private bool isMainPrivacy;
 
-        public bool IsPrivacyPolicyAccept { get; private set; }
-        
-        private void Awake()
+        private string privacyKey = "privacy_accepted";
+
+        public bool IsPrivacyPolicyAccepted { get; private set; }
+
+        private void OnEnable() => privacyPolicyStartButton.onClick.AddListener(AcceptPrivacyPolicy);
+
+        public void Init()
         {
-            mainMenuController = transform.parent.gameObject.GetComponent<MainMenuController>();
-        }
-        
-        private void OnEnable()
-        {
-            privacyPolicyStartButton.onClick.AddListener(AcceptPrivacyPolicy);
+            gameObject.SetActive(false);
+            if (isMainPrivacy)
+            {
+                if (PlayerPrefs.GetInt(privacyKey, 0) == 0)
+                    gameObject.SetActive(true);
+                else
+                    IsPrivacyPolicyAccepted = true;
+            }
+            else
+            {
+                gameObject.SetActive(true);
+                mainMenuController = transform.parent.gameObject.GetComponent<MainMenuController>();
+            }
         }
 
         private void AcceptPrivacyPolicy()
         {
-            IsPrivacyPolicyAccept = true;
-            mainMenuController.ChangeMenu(EMainMenuElements.MainMenu);
+            if (isMainPrivacy)
+            {
+                PlayerPrefs.SetInt("privacy_accepted", 1);
+                IsPrivacyPolicyAccepted = true;
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                mainMenuController.ChangeMenu(EMainMenuElements.MainMenu);
+            }
         }
-        
-        private void OnDisable()
-        {
-            privacyPolicyStartButton.onClick.RemoveListener(AcceptPrivacyPolicy);
-        }
+
+        private void OnDisable() => privacyPolicyStartButton.onClick.RemoveListener(AcceptPrivacyPolicy);
     }
 }

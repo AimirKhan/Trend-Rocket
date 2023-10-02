@@ -19,14 +19,8 @@ namespace UI.MainMenu
 
         public UiManager UiManager => uiManager;
         
-        private void OnEnable()
-        {
-            privacyPolicy.gameObject.SetActive(!privacyPolicy.IsPrivacyPolicyAccept);
-        }
-
         public void ChangeMenu(EMainMenuElements elements)
         {
-            privacyPolicy.gameObject.SetActive(true);
             switch (elements)
             {
                 case EMainMenuElements.MainMenu:

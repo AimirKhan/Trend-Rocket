@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Services.RemoteConfig
 {
@@ -13,23 +16,22 @@ namespace Services.RemoteConfig
     
         async Task InitializeRemoteConfigAsync()
         {
-            // initialize handlers for unity game services
             await UnityServices.InitializeAsync();
 
-            // remote config requires authentication for managing environment information
             if (!AuthenticationService.Instance.IsSignedIn)
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
             }
         }
 
-        public async Task StartInitRemoteConfig()
+        public IEnumerator Init()
         {
-            // initialize Unity's authentication and core services, however check for internet connection
-            // in order to fail gracefully without throwing exception if connection does not exist
-            if (Utilities.CheckForInternetConnection())
+            var isServerReachable = false;
+            yield return Connection.IsServerReachable(ctx => isServerReachable = ctx);
+            if (isServerReachable)
             {
-                await InitializeRemoteConfigAsync();
+                var task = InitializeRemoteConfigAsync();
+                yield return new WaitUntil(() => task.IsCompleted);
             }
 
             RemoteConfigService.Instance.FetchCompleted += ApplyRemoteSettings;

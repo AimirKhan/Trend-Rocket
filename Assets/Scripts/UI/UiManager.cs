@@ -8,31 +8,18 @@ namespace UI
 {
     public class UiManager : MonoBehaviour
     {
-        [SerializeField] private OpenApp openApp;
-    
+        [SerializeField] private MainGameManager mainGameManager;
+        [SerializeField] private LoadingScreen loadingScreen;
         [Header("UI Elements")]
         [SerializeField] private MainMenuController mainMenuUi;
         [SerializeField] private CapGameController capGameUi;
         [SerializeField] private Game.CapGame capGame;
-        [SerializeField] private MainGameManager mainGameManager;
-        [SerializeField] private LoadingScreen loadingScreen;
-
-        public MainMenuController MainMenuUi => mainMenuUi;
-        public CapGameController CapGameUi => capGameUi;
-        public LoadingScreen LoadingScreenUi => loadingScreen;
-
+        
         private void OnEnable()
         {
-            ShowLoadingScreen(); // On start app whatever cap or product
-            openApp.HideNative += HideNative;
-            openApp.OnOpenCap.AddListener(() => ShowMainMenu());
-        }
-
-        private void HideNative()
-        {
-            ShowMainMenu(false);
-            ShowCapGame(false);
-            ShowLoadingScreen(false);
+            // Cap game Entry point
+            loadingScreen.gameObject.SetActive(true);
+            ShowMainMenu();
         }
 
         public void ShowMainMenu(bool menu = true)
@@ -51,17 +38,6 @@ namespace UI
             mainGameManager.gameObject.SetActive(cap);
             capGame.gameObject.SetActive(cap);
             loadingScreen.gameObject.SetActive(false);
-        }
-    
-        public void ShowLoadingScreen(bool splash = true)
-        {
-            loadingScreen.gameObject.SetActive(splash);
-        }
-    
-        private void OnDisable()
-        {
-            openApp.HideNative -= HideNative;
-            openApp.OnOpenCap.RemoveListener(() => ShowCapGame());
         }
     }
 }

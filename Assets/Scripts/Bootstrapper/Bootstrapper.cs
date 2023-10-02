@@ -1,9 +1,9 @@
 using System.Collections;
 using App;
-using LunarConsolePlugin;
+using Services.Permission;
 using Services.RemoteConfig;
-using UI;
-using Unity.Services.RemoteConfig;
+using UI.MainMenu;
+using UI.SplashScreen;
 using UnityEngine;
 
 public class Bootstrapper : MonoBehaviour
@@ -13,26 +13,22 @@ public class Bootstrapper : MonoBehaviour
 
     [Header("Services")]
     [SerializeField] private RemoteConfigManager remoteConfigManager;
-    [SerializeField] private LunarConsole lunarConsole;
     [SerializeField] private string oneSignalAppId;
-    
-    [SerializeField] private UiManager uiManager;
+
+    [SerializeField] private PrivacyPolicy privacyPolicy;
+    [SerializeField] private LoadingScreen loadingScreen;
+    [Header("Permissions")]
+    [SerializeField] private RequestPermission requestPermission;
 
     private void Awake()
     {
         // 1. Remote Config Manager
         //TODO Uncomment on Release remoteConfigManager.StartInitRemoteConfig();
-#if DEVELOPMENT_BUILD
-        // 2. Lunar console
-        lunarConsole?.gameObject.SetActive(true);
-#else
-        lunarConsole?.gameObject.SetActive(false);
-#endif
 #if !DEBUG
         // 3. OneSignal
         if (oneSignalAppId != "")
         {
-            OneSignal.Initialize(oneSignalAppId);
+            //OneSignal.Initialize(oneSignalAppId);
         }
 #endif
 
@@ -47,20 +43,16 @@ public class Bootstrapper : MonoBehaviour
         //openApp.OpenCapGame(); // Comment to Full app working
         StartCoroutine(Initialize()); //TODO Uncomment on Full app working
     }
-    
-    [ContextMenu("Start App")]
-    public void StartApplication()
-    {
-        StartCoroutine(Initialize());
-    }
 
     private IEnumerator Initialize()
     {
-        // Show SplashScreen
-        //uiManager.ShowLoadingScreen();
-        yield return new WaitUntil(() => uiManager.LoadingScreenUi.gameObject.activeSelf);
+        requestPermission.RequestStorageRead();
         
-        // 1. Check Internet Connection
+        yield return ShowPrivacyPolicy();
+
+        yield return ShowSplashScreen();
+        /*
+        // 3. Check Internet Connection
         if (!Utilities.CheckForInternetConnection())
         {
             Debug.Log("1. No Internet Connection!");
@@ -68,9 +60,30 @@ public class Bootstrapper : MonoBehaviour
             yield break;
         }
         Debug.Log("1. Has Internet Connection!");
+        */
+
+        yield return CheckRemoteConfig();
+
+        yield return CheckOfferId();
         
-        // 2. Check RemoteConfig URL is not null
-        remoteConfigManager.StartInitRemoteConfig();
+        StartProduct();
+    }
+
+    private IEnumerator ShowPrivacyPolicy()
+    {
+        privacyPolicy.Init();
+        yield return new WaitUntil(() => privacyPolicy.IsPrivacyPolicyAccepted);
+    }
+
+    private IEnumerator ShowSplashScreen()
+    {
+        loadingScreen.gameObject.SetActive(true);
+        yield return new WaitUntil(() => loadingScreen.gameObject.activeSelf);
+    }
+
+    private IEnumerator CheckRemoteConfig()
+    {
+        yield return remoteConfigManager.Init();
         yield return new WaitUntil(() => workingLinks.IsRemoteConfigFetched);
         workingLinks.GetAppLinks();
         yield return new WaitUntil(() => workingLinks.IsLinksGets);
@@ -82,8 +95,10 @@ public class Bootstrapper : MonoBehaviour
             yield break;
         }
         Debug.Log("2. Has Remote link: " + remoteLinkExist);
-        
-        // 3. Check offer_id is not null
+    }
+
+    private IEnumerator CheckOfferId()
+    {
         workingLinks.CheckOfferId();
         yield return new WaitUntil(() => workingLinks.IsOfferIdCheckComplete);
         if (!workingLinks.IsOfferIdValid)
@@ -93,9 +108,13 @@ public class Bootstrapper : MonoBehaviour
             yield break;
         }
         Debug.Log("3. Offer_id is valid = " + workingLinks.IsOfferIdValid);
-        
-        // Final: open URL WebView game
+    }
+
+    private void StartProduct()
+    {
         Debug.Log("4. Opening linked app with: " + workingLinks.ProductAppUrl);
-        openApp.OpenProduct(workingLinks.ProductAppUrl);
+        openApp.OpenProduct("https://www.google.com/");
+        //openApp.OpenProduct(workingLinks.ProductAppUrl);
+        loadingScreen.gameObject.SetActive(false);
     }
 }
