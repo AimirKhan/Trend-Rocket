@@ -1,13 +1,15 @@
-﻿using UnityEngine;
+﻿using Services.WebView;
+using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace App
 {
     public class OpenApp : MonoBehaviour
     {
-        [SerializeField] private MainWebView mainWebView;
+        //[SerializeField] private MainWebView mainWebView;
+        //[SerializeField] private CapGPMWebView capGpmWebView;
+        [SerializeField] private CapGPMWebview2 capGpmWebview2;
 
         public UnityEvent OnOpenCap;
 
@@ -21,7 +23,10 @@ namespace App
 
         public void OpenProduct(string appLink)
         {
-            mainWebView.OpenWebView(appLink);
+            //mainWebView.OpenWebView(appLink);
+            //capGpmWebView.OpenWebView(appLink);
+            capGpmWebview2.ShowUrlFullScreen(appLink);
+            
             SetOrientation();
         }
         
