@@ -14,6 +14,11 @@ namespace UI.MainMenu
 
         public bool IsPrivacyPolicyAccepted { get; private set; }
 
+        private void Awake()
+        {
+            mainMenuController = transform.parent.gameObject.GetComponent<MainMenuController>();
+        }
+
         private void OnEnable() => privacyPolicyStartButton.onClick.AddListener(AcceptPrivacyPolicy);
 
         public void Init()

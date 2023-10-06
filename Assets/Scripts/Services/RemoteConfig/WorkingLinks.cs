@@ -40,6 +40,7 @@ namespace Services.RemoteConfig
             var result = RemoteUrl.Substring(
                 0, RemoteUrl.Length - cropLinkKeyword.Length - keywordIndex - 1);
             ProductAppUrl = result;
+            GlobalVariables.Instance.ProductUrl = result;
             IsLinkExist = true;
             IsLinksGets = true;
         }

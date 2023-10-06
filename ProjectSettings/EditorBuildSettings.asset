@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CapGameScene.unity
     guid: 0304301f3f6f23a45a798f086955a0ee
+  - enabled: 1
+    path: Assets/Scenes/WebViewScene.unity
+    guid: e3c87c1f39e0b204295da6a540653f4c
   m_configObjects: {}

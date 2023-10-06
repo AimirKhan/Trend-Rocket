@@ -21,16 +21,15 @@ namespace App
 
         public void OpenProduct(string appLink)
         {
-            mainWebView.OpenWebView(appLink);
+            //mainWebView.OpenWebView(appLink);
             SetOrientation();
+            SceneManager.LoadScene(sceneBuildIndex: 2);
         }
         
         private void SetOrientation()
         {
-            Screen.autorotateToPortrait = true;
             Screen.autorotateToLandscapeLeft = true;
             Screen.autorotateToLandscapeRight = true;
-            Screen.orientation = ScreenOrientation.AutoRotation;
         }
     }
 }

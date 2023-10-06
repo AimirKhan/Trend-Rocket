@@ -41,6 +41,7 @@ namespace Services
         public ReactiveProperty<float> CurrentScore = new(0);
         public ReactiveProperty<float> RecordScore = new(0);
         public ReactiveProperty<int> CurrentZombie = new(0);
+        public string ProductUrl = new("");
         public ReactiveProperty<EGameState> GameState = new();
         public List<ZombieSO> zombies;
     }

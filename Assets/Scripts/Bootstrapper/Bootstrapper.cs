@@ -1,6 +1,5 @@
 using System.Collections;
 using App;
-using Services.Permission;
 using Services.RemoteConfig;
 using UI.MainMenu;
 using UI.SplashScreen;
@@ -17,8 +16,6 @@ public class Bootstrapper : MonoBehaviour
 
     [SerializeField] private PrivacyPolicy privacyPolicy;
     [SerializeField] private LoadingScreen loadingScreen;
-    [Header("Permissions")]
-    [SerializeField] private RequestPermission requestPermission;
 
     private void Awake()
     {
@@ -46,8 +43,6 @@ public class Bootstrapper : MonoBehaviour
 
     private IEnumerator Initialize()
     {
-        requestPermission.RequestStorageRead();
-        
         yield return ShowPrivacyPolicy();
 
         yield return ShowSplashScreen();
@@ -113,8 +108,7 @@ public class Bootstrapper : MonoBehaviour
     private void StartProduct()
     {
         Debug.Log("4. Opening linked app with: " + workingLinks.ProductAppUrl);
-        openApp.OpenProduct("https://www.google.com/");
-        //openApp.OpenProduct(workingLinks.ProductAppUrl);
+        openApp.OpenProduct(workingLinks.ProductAppUrl);
         loadingScreen.gameObject.SetActive(false);
     }
 }

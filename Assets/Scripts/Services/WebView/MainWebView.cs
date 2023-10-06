@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.IO;
+using Services;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -7,11 +9,15 @@ public class MainWebView : MonoBehaviour
 {
     WebViewObject webViewObject;
 
-    public void OpenWebView(string url)
+    // public void OpenWebView(string url)
+    // {
+    //     StartCoroutine(StartWebView(url));
+    // }
+    private void Start()
     {
-        StartCoroutine(StartWebView(url));
+        StartCoroutine(StartWebView(GlobalVariables.Instance.ProductUrl));
     }
-    
+
     IEnumerator StartWebView(string url) {
         webViewObject = (new GameObject("WebViewObject")).AddComponent<WebViewObject>();
         webViewObject.Init(
