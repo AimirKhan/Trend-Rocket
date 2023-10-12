@@ -4,6 +4,7 @@ using Services.RemoteConfig;
 using UI.MainMenu;
 using UI.SplashScreen;
 using UnityEngine;
+using OneSignalSDK;
 
 public class Bootstrapper : MonoBehaviour
 {
@@ -19,15 +20,11 @@ public class Bootstrapper : MonoBehaviour
 
     private void Awake()
     {
-        // 1. Remote Config Manager
-        //TODO Uncomment on Release remoteConfigManager.StartInitRemoteConfig();
-#if !DEBUG
         // 3. OneSignal
         if (oneSignalAppId != "")
         {
-            //OneSignal.Initialize(oneSignalAppId);
+            OneSignal.Initialize(oneSignalAppId);
         }
-#endif
 
         // Last. Set 60fps
         Application.targetFrameRate = 60;
